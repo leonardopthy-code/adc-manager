@@ -1,0 +1,150 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:#f5f7fb;
+}
+
+#root{
+  width:100%;
+  min-height:100vh;
+}
+
+.login-container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  background:#0B2D6B;
+}
+
+.login-card{
+  width:420px;
+  background:white;
+  padding:40px;
+  border-radius:20px;
+  box-shadow:0 20px 40px rgba(0,0,0,.3);
+}
+
+.login-card h1{
+  color:#0B2D6B;
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.login-card p{
+  text-align:center;
+  color:#F5C400;
+  margin-bottom:30px;
+}
+
+input,
+select{
+  width:100%;
+  padding:14px;
+  margin-bottom:15px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  font-size:15px;
+}
+
+button{
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+  transition:.2s;
+}
+
+button:hover{
+  opacity:.9;
+}
+
+.dashboard{
+  display:flex;
+  min-height:100vh;
+}
+
+.sidebar{
+  width:240px;
+  background:#0B2D6B;
+  color:white;
+  padding:25px;
+}
+
+.sidebar h2{
+  margin-bottom:30px;
+}
+
+.sidebar ul{
+  list-style:none;
+}
+
+.sidebar li{
+  margin:18px 0;
+  cursor:pointer;
+}
+
+.sidebar li:hover{
+  color:#F5C400;
+}
+
+.content{
+  flex:1;
+  background:#f5f7fb;
+  padding:30px;
+}
+
+.form-atleta{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+  background:white;
+  padding:25px;
+  border-radius:15px;
+  margin-bottom:25px;
+  box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.form-atleta h2{
+  grid-column:1/3;
+  color:#0B2D6B;
+}
+
+.form-atleta button{
+  grid-column:1/3;
+  background:#F5C400;
+  color:#0B2D6B;
+  padding:15px;
+}
+
+.novo-atleta{
+  background:#0B2D6B;
+  color:white;
+  padding:12px 22px;
+}
+
+.tabela-atletas{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+  border-radius:15px;
+  overflow:hidden;
+  box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.tabela-atletas th{
+  background:#0B2D6B;
+  color:white;
+  padding:15px;
+}
+
+.tabela-atletas td{
+  padding:15px;
+  border-bottom:1px solid #eee;
+  text-align:center;
+}
