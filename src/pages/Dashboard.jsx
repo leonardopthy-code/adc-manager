@@ -1,92 +1,214 @@
+import { useEffect, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
+import { buscarEstatisticas } from "../services/dashboardService";
 
 export default function Dashboard() {
+  const [dados, setDados] = useState({
+    totalAtletas: 0,
+    emDia: 0,
+    atrasados: 0,
+    categorias: {},
+    atletas: [],
+  });
+
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
+
+  useEffect(() => {
+    async function carregarDashboard() {
+      try {
+        const estatisticas = await buscarEstatisticas();
+        setDados(estatisticas);
+      } catch (error) {
+        console.error("Erro ao carregar Dashboard:", error);
+        setErro("Não foi possível carregar os dados.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    carregarDashboard();
+  }, []);
+
   const cards = [
     {
-      titulo: "Atletas",
-      valor: 0,
-      cor: "#0B2D6B",
+      titulo: "Total de Atletas",
+      valor: dados.totalAtletas,
       icone: "👥",
+      cor: "#0B2D6B",
     },
     {
-      titulo: "Mensalidades Pagas",
-      valor: "R$ 0,00",
-      cor: "#28a745",
+      titulo: "Mensalidades em Dia",
+      valor: dados.emDia,
       icone: "💰",
+      cor: "#28a745",
     },
     {
-      titulo: "Pendentes",
-      valor: 0,
-      cor: "#dc3545",
+      titulo: "Mensalidades Atrasadas",
+      valor: dados.atrasados,
       icone: "⚠️",
+      cor: "#dc3545",
     },
     {
       titulo: "Treinos Hoje",
       valor: 1,
-      cor: "#F5C400",
       icone: "⚽",
+      cor: "#F5C400",
     },
   ];
 
   return (
     <MainLayout>
-      <h1 style={{ marginBottom: "25px", color: "#0B2D6B" }}>
-        Dashboard
-      </h1>
+      <div className="dashboard-header">
+        <div>
+          <h1>Dashboard</h1>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px,1fr))",
-          gap: "20px",
-        }}
-      >
-        {cards.map((card) => (
-          <div
-            key={card.titulo}
-            style={{
-              background: "#fff",
-              borderRadius: "15px",
-              padding: "25px",
-              boxShadow: "0 5px 15px rgba(0,0,0,.08)",
-              borderLeft: `8px solid ${card.cor}`,
-            }}
-          >
-            <h3>{card.icone} {card.titulo}</h3>
+          <p>
+            Bem-vindo ao <strong>ADC Manager</strong> 👋
+          </p>
+        </div>
+      </div>
 
-            <h1
-              style={{
-                marginTop: "15px",
-                color: card.cor,
-                fontSize: "34px",
-              }}
-            >
-              {card.valor}
-            </h1>
+      {erro && (
+        <div className="dashboard-erro">
+          {erro}
+        </div>
+      )}
+
+      {carregando ? (
+        <div className="dashboard-carregando">
+          Carregando informações...
+        </div>
+      ) : (
+        <>
+          <div className="dashboard-cards">
+            {cards.map((card) => (
+              <div
+                key={card.titulo}
+                className="stat-card"
+                style={{
+                  borderLeft: `6px solid ${card.cor}`,
+                }}
+              >
+                <div
+                  className="stat-icon"
+                  style={{
+                    background: `${card.cor}15`,
+                  }}
+                >
+                  {card.icone}
+                </div>
+
+                <div>
+                  <p>{card.titulo}</p>
+
+                  <h2
+                    style={{
+                      color: card.cor,
+                    }}
+                  >
+                    {card.valor}
+                  </h2>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      <div
-        style={{
-          background: "#fff",
-          marginTop: "35px",
-          borderRadius: "15px",
-          padding: "25px",
-          boxShadow: "0 5px 15px rgba(0,0,0,.08)",
-        }}
-      >
-        <h2>Últimos atletas cadastrados</h2>
+          <div className="dashboard-grid">
+            <div className="dashboard-box">
+              <div className="dashboard-box-header">
+                <div>
+                  <h2>Atletas por categoria</h2>
+                  <p>Distribuição dos atletas cadastrados</p>
+                </div>
+              </div>
 
-        <p
-          style={{
-            marginTop: "20px",
-            color: "#777",
-          }}
-        >
-          Nenhum atleta cadastrado.
-        </p>
-      </div>
+              {Object.keys(dados.categorias).length === 0 ? (
+                <div className="dashboard-vazio">
+                  Nenhum atleta cadastrado ainda.
+                </div>
+              ) : (
+                <div className="categorias-lista">
+                  {Object.entries(dados.categorias).map(
+                    ([categoria, quantidade]) => {
+                      const porcentagem =
+                        dados.totalAtletas > 0
+                          ? (quantidade / dados.totalAtletas) * 100
+                          : 0;
+
+                      return (
+                        <div
+                          className="categoria-item"
+                          key={categoria}
+                        >
+                          <div className="categoria-topo">
+                            <span>{categoria || "Sem categoria"}</span>
+
+                            <strong>{quantidade}</strong>
+                          </div>
+
+                          <div className="barra-fundo">
+                            <div
+                              className="barra-progresso"
+                              style={{
+                                width: `${porcentagem}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    }
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div className="dashboard-box">
+              <div className="dashboard-box-header">
+                <div>
+                  <h2>Últimos atletas</h2>
+                  <p>Atletas cadastrados recentemente</p>
+                </div>
+              </div>
+
+              {dados.atletas.length === 0 ? (
+                <div className="dashboard-vazio">
+                  Nenhum atleta cadastrado ainda.
+                </div>
+              ) : (
+                <div className="ultimos-atletas">
+                  {dados.atletas
+                    .slice(-5)
+                    .reverse()
+                    .map((atleta) => (
+                      <div
+                        className="ultimo-atleta"
+                        key={atleta.id}
+                      >
+                        <div className="atleta-avatar">
+                          {atleta.nome
+                            ? atleta.nome
+                                .charAt(0)
+                                .toUpperCase()
+                            : "A"}
+                        </div>
+
+                        <div className="atleta-info">
+                          <strong>{atleta.nome}</strong>
+
+                          <span>
+                            {atleta.categoria ||
+                              "Sem categoria"}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </MainLayout>
   );
 }
