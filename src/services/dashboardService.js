@@ -1,44 +1,146 @@
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+
 import { getFirestore } from "firebase/firestore";
 import app from "./firebase";
 
 const db = getFirestore(app);
 
 export async function buscarEstatisticas() {
-  const atletasRef = collection(db, "atletas");
+  try {
+    // ==========================================
+    // ATLETAS
+    // ==========================================
 
-  const snapshot = await getDocs(atletasRef);
+    const atletasRef = collection(
+      db,
+      "atletas"
+    );
 
-  const atletas = snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
+    const snapshotAtletas =
+      await getDocs(atletasRef);
 
-  const totalAtletas = atletas.length;
+    const atletas =
+      snapshotAtletas.docs.map((documento) => ({
+        id: documento.id,
+        ...documento.data(),
+      }));
 
-  const emDia = atletas.filter(
-    atleta => atleta.mensalidade === "Em dia"
-  ).length;
+    const totalAtletas = atletas.length;
 
-  const atrasados = atletas.filter(
-    atleta => atleta.mensalidade === "Atrasado"
-  ).length;
+    // ==========================================
+    // CATEGORIAS
+    // ==========================================
 
-  const categorias = {};
+    const categorias = {};
 
-  atletas.forEach(atleta => {
-    if (!categorias[atleta.categoria]) {
-      categorias[atleta.categoria] = 0;
-    }
+    atletas.forEach((atleta) => {
+      const categoria =
+        atleta.categoria || "Sem categoria";
 
-    categorias[atleta.categoria]++;
-  });
+      if (!categorias[categoria]) {
+        categorias[categoria] = 0;
+      }
 
-  return {
-    totalAtletas,
-    emDia,
-    atrasados,
-    categorias,
-    atletas,
-  };
+      categorias[categoria]++;
+    });
+
+    // ==========================================
+    // MÊS ATUAL
+    // ==========================================
+
+    const hoje = new Date();
+
+    const mesAtual =
+      hoje.getMonth() + 1;
+
+    const anoAtual =
+      hoje.getFullYear();
+
+    // ==========================================
+    // PAGAMENTOS DO MÊS ATUAL
+    // ==========================================
+
+    const pagamentosRef = collection(
+      db,
+      "pagamentos"
+    );
+
+    const consultaPagamentos = query(
+      pagamentosRef,
+      where("mes", "==", mesAtual),
+      where("ano", "==", anoAtual)
+    );
+
+    const snapshotPagamentos =
+      await getDocs(
+        consultaPagamentos
+      );
+
+    const pagamentos =
+      snapshotPagamentos.docs.map(
+        (documento) => ({
+          id: documento.id,
+          ...documento.data(),
+        })
+      );
+
+    // ==========================================
+    // PAGAMENTOS EM DIA
+    // ==========================================
+
+    const pagamentosPagos =
+      pagamentos.filter(
+        (pagamento) =>
+          pagamento.status === "pago"
+      );
+
+    const emDia =
+      pagamentosPagos.length;
+
+    // ==========================================
+    // ATRASADOS / PENDENTES
+    // ==========================================
+
+    const atrasados =
+      totalAtletas - emDia;
+
+    // ==========================================
+    // VALOR RECEBIDO
+    // ==========================================
+
+    const valorRecebido =
+      pagamentosPagos.reduce(
+        (total, pagamento) =>
+          total +
+          Number(pagamento.valor || 0),
+        0
+      );
+
+    // ==========================================
+    // RETORNO
+    // ==========================================
+
+    return {
+      totalAtletas,
+      emDia,
+      atrasados,
+      valorRecebido,
+      mesAtual,
+      anoAtual,
+      categorias,
+      atletas,
+    };
+  } catch (erro) {
+    console.error(
+      "Erro ao buscar estatísticas:",
+      erro
+    );
+
+    throw erro;
+  }
 }

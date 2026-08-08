@@ -4,11 +4,15 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Atletas from "./pages/Atletas";
 import Mensalidades from "./pages/Mensalidades";
+import Presenca from "./pages/Presenca";
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route
+        path="/"
+        element={<Login />}
+      />
 
       <Route
         path="/dashboard"
@@ -23,6 +27,11 @@ export default function App() {
       <Route
         path="/mensalidades"
         element={<Mensalidades />}
+      />
+
+      <Route
+        path="/presenca"
+        element={<Presenca />}
       />
     </Routes>
   );
