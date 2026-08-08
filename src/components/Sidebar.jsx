@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 import {
   FaHome,
   FaUsers,
@@ -17,13 +18,25 @@ export default function Sidebar() {
         background: "#0A2A66",
         color: "white",
         padding: "20px",
+        boxSizing: "border-box",
       }}
     >
-      <h2 style={{ color: "#FFD700", marginBottom: "30px" }}>
+      <h2
+        style={{
+          color: "#FFD700",
+          marginBottom: "30px",
+        }}
+      >
         🐊 ADC Manager
       </h2>
 
-      <nav style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+      <nav
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "18px",
+        }}
+      >
         <Link to="/dashboard">
           <FaHome /> Dashboard
         </Link>
@@ -32,8 +45,8 @@ export default function Sidebar() {
           <FaUsers /> Atletas
         </Link>
 
-        <Link to="/financeiro">
-          <FaMoneyBill /> Financeiro
+        <Link to="/mensalidades">
+          <FaMoneyBill /> Mensalidades
         </Link>
 
         <Link to="/presenca">
