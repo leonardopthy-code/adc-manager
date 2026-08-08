@@ -1,88 +1,195 @@
 import { useEffect, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
+
 import {
   listarAtletas,
-  editarAtleta,
+  listarPagamentos,
+  registrarPagamento,
+  tornarPagamentoPendente,
 } from "../services/atletasService";
 
+const meses = [
+  { numero: 1, nome: "Janeiro" },
+  { numero: 2, nome: "Fevereiro" },
+  { numero: 3, nome: "Março" },
+  { numero: 4, nome: "Abril" },
+  { numero: 5, nome: "Maio" },
+  { numero: 6, nome: "Junho" },
+  { numero: 7, nome: "Julho" },
+  { numero: 8, nome: "Agosto" },
+  { numero: 9, nome: "Setembro" },
+  { numero: 10, nome: "Outubro" },
+  { numero: 11, nome: "Novembro" },
+  { numero: 12, nome: "Dezembro" },
+];
+
 export default function Mensalidades() {
+  const hoje = new Date();
+
   const [atletas, setAtletas] = useState([]);
+  const [pagamentos, setPagamentos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [busca, setBusca] = useState("");
   const [salvando, setSalvando] = useState(null);
 
+  const [mesSelecionado, setMesSelecionado] = useState(
+    hoje.getMonth() + 1
+  );
+
+  const [anoSelecionado, setAnoSelecionado] = useState(
+    hoje.getFullYear()
+  );
+
+  // ==========================================
+  // CARREGAR ATLETAS E PAGAMENTOS
+  // ==========================================
+
   useEffect(() => {
-    async function carregar() {
+    async function carregarDados() {
+      setCarregando(true);
+
       try {
-        const dados = await listarAtletas();
-        setAtletas(dados);
+        const [dadosAtletas, dadosPagamentos] =
+          await Promise.all([
+            listarAtletas(),
+            listarPagamentos(
+              mesSelecionado,
+              anoSelecionado
+            ),
+          ]);
+
+        setAtletas(dadosAtletas);
+        setPagamentos(dadosPagamentos);
       } catch (erro) {
-        console.error("Erro ao carregar atletas:", erro);
+        console.error(
+          "Erro ao carregar mensalidades:",
+          erro
+        );
       } finally {
         setCarregando(false);
       }
     }
 
-    carregar();
-  }, []);
+    carregarDados();
+  }, [mesSelecionado, anoSelecionado]);
 
-  async function alterarMensalidade(atleta) {
-    const novaSituacao =
-      atleta.mensalidade === "atrasada"
-        ? "em-dia"
-        : "atrasada";
+  // ==========================================
+  // VERIFICAR SE O ATLETA PAGOU
+  // ==========================================
+
+  function verificarPagamento(atletaId) {
+    return pagamentos.find(
+      (pagamento) =>
+        pagamento.atletaId === atletaId &&
+        pagamento.status === "pago"
+    );
+  }
+
+  // ==========================================
+  // PAGAR / TORNAR PENDENTE
+  // ==========================================
+
+  async function alterarPagamento(atleta) {
+    const pagamento = verificarPagamento(
+      atleta.id
+    );
 
     try {
       setSalvando(atleta.id);
 
-      await editarAtleta(atleta.id, {
-        mensalidade: novaSituacao,
-      });
+      // Se já está pago, torna pendente
+      if (pagamento) {
+        await tornarPagamentoPendente(
+          atleta.id,
+          mesSelecionado,
+          anoSelecionado
+        );
+      }
 
-      setAtletas((listaAtual) =>
-        listaAtual.map((item) =>
-          item.id === atleta.id
-            ? {
-                ...item,
-                mensalidade: novaSituacao,
-              }
-            : item
-        )
+      // Se está pendente, registra pagamento
+      else {
+        await registrarPagamento(
+          atleta.id,
+          atleta.nome,
+          mesSelecionado,
+          anoSelecionado,
+          20
+        );
+      }
+
+      // Recarrega os pagamentos do mês
+      const pagamentosAtualizados =
+        await listarPagamentos(
+          mesSelecionado,
+          anoSelecionado
+        );
+
+      setPagamentos(
+        pagamentosAtualizados
       );
     } catch (erro) {
       console.error(
-        "Erro ao atualizar mensalidade:",
+        "Erro ao alterar pagamento:",
         erro
       );
 
       alert(
-        "Não foi possível atualizar a mensalidade."
+        "Não foi possível atualizar o pagamento."
       );
     } finally {
       setSalvando(null);
     }
   }
 
-  const atletasFiltrados = atletas.filter((atleta) =>
-    atleta.nome
-      ?.toLowerCase()
-      .includes(busca.toLowerCase())
+  // ==========================================
+  // FILTRO
+  // ==========================================
+
+  const atletasFiltrados = atletas.filter(
+    (atleta) =>
+      atleta.nome
+        ?.toLowerCase()
+        .includes(busca.toLowerCase())
   );
+
+  // ==========================================
+  // ESTATÍSTICAS
+  // ==========================================
 
   const totalAtletas = atletas.length;
 
-  const emDia = atletas.filter(
-    (atleta) =>
-      atleta.mensalidade !== "atrasada"
+  const totalPagos = atletas.filter((atleta) =>
+    verificarPagamento(atleta.id)
   ).length;
 
-  const atrasadas = atletas.filter(
-    (atleta) =>
-      atleta.mensalidade === "atrasada"
-  ).length;
+  const totalPendentes =
+    totalAtletas - totalPagos;
+
+  const valorRecebido = pagamentos
+    .filter(
+      (pagamento) =>
+        pagamento.status === "pago"
+    )
+    .reduce(
+      (total, pagamento) =>
+        total + Number(pagamento.valor || 0),
+      0
+    );
+
+  const mesNome =
+    meses.find(
+      (mes) =>
+        mes.numero === mesSelecionado
+    )?.nome || "";
+
+  // ==========================================
+  // TELA
+  // ==========================================
 
   return (
     <MainLayout>
+      {/* CABEÇALHO */}
+
       <div className="atletas-header">
         <div>
           <h1>Mensalidades</h1>
@@ -93,47 +200,188 @@ export default function Mensalidades() {
         </div>
       </div>
 
+      {/* ======================================
+          SELEÇÃO DO MÊS
+      ====================================== */}
+
+      <div
+        style={{
+          background: "#fff",
+          padding: "20px",
+          borderRadius: "15px",
+          marginBottom: "25px",
+          boxShadow:
+            "0 5px 15px rgba(0,0,0,.08)",
+          display: "flex",
+          gap: "15px",
+          alignItems: "end",
+          flexWrap: "wrap",
+        }}
+      >
+        <div>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "7px",
+              fontWeight: "600",
+            }}
+          >
+            Mês de referência
+          </label>
+
+          <select
+            value={mesSelecionado}
+            onChange={(e) =>
+              setMesSelecionado(
+                Number(e.target.value)
+              )
+            }
+            style={{
+              padding: "11px",
+              borderRadius: "8px",
+              border: "1px solid #ddd",
+              fontSize: "15px",
+            }}
+          >
+            {meses.map((mes) => (
+              <option
+                key={mes.numero}
+                value={mes.numero}
+              >
+                {mes.nome}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* ANO */}
+
+        <div>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "7px",
+              fontWeight: "600",
+            }}
+          >
+            Ano
+          </label>
+
+          <select
+            value={anoSelecionado}
+            onChange={(e) =>
+              setAnoSelecionado(
+                Number(e.target.value)
+              )
+            }
+            style={{
+              padding: "11px",
+              borderRadius: "8px",
+              border: "1px solid #ddd",
+              fontSize: "15px",
+            }}
+          >
+            <option value={2026}>
+              2026
+            </option>
+
+            <option value={2027}>
+              2027
+            </option>
+
+            <option value={2028}>
+              2028
+            </option>
+          </select>
+        </div>
+
+        {/* REFERÊNCIA */}
+
+        <div
+          style={{
+            fontWeight: "700",
+            color: "#0B2D6B",
+            paddingBottom: "10px",
+          }}
+        >
+          📅 {mesNome}/{anoSelecionado}
+        </div>
+      </div>
+
+      {/* ======================================
+          CARDS
+      ====================================== */}
+
       <div className="cards-mensalidades">
+        {/* TOTAL */}
+
         <div className="card-mensalidade">
           <span>👥</span>
 
           <div>
             <small>Total de atletas</small>
-            <strong>{totalAtletas}</strong>
+
+            <strong>
+              {totalAtletas}
+            </strong>
           </div>
         </div>
+
+        {/* PAGOS */}
 
         <div className="card-mensalidade card-verde">
           <span>✅</span>
 
           <div>
-            <small>Em dia</small>
-            <strong>{emDia}</strong>
+            <small>Pagas</small>
+
+            <strong>
+              {totalPagos}
+            </strong>
           </div>
         </div>
+
+        {/* PENDENTES */}
 
         <div className="card-mensalidade card-vermelho">
           <span>⚠️</span>
 
           <div>
-            <small>Atrasadas</small>
-            <strong>{atrasadas}</strong>
+            <small>Pendentes</small>
+
+            <strong>
+              {totalPendentes}
+            </strong>
           </div>
         </div>
+
+        {/* RECEBIDO */}
 
         <div className="card-mensalidade card-amarelo">
           <span>💰</span>
 
           <div>
-            <small>Valor mensal</small>
-            <strong>R$ 20,00</strong>
+            <small>Recebido</small>
+
+            <strong>
+              R${" "}
+              {valorRecebido
+                .toFixed(2)
+                .replace(".", ",")}
+            </strong>
           </div>
         </div>
       </div>
 
+      {/* ======================================
+          BUSCA
+      ====================================== */}
+
       <div className="filtros-atletas">
         <div className="campo-filtro busca-atleta">
-          <label>Buscar atleta</label>
+          <label>
+            Buscar atleta
+          </label>
 
           <input
             type="text"
@@ -146,31 +394,54 @@ export default function Mensalidades() {
         </div>
       </div>
 
+      {/* ======================================
+          CARREGANDO
+      ====================================== */}
+
       {carregando ? (
         <div className="dashboard-carregando">
           Carregando mensalidades...
         </div>
       ) : atletasFiltrados.length === 0 ? (
-        <div className="atletas-vazio">
-          <div className="vazio-icone">💰</div>
+        /* ====================================
+           NENHUM ATLETA
+        ==================================== */
 
-          <h2>Nenhum atleta encontrado</h2>
+        <div className="atletas-vazio">
+          <div className="vazio-icone">
+            💰
+          </div>
+
+          <h2>
+            Nenhum atleta encontrado
+          </h2>
 
           <p>
-            Cadastre um atleta primeiro ou altere
-            a pesquisa.
+            Cadastre um atleta primeiro ou
+            altere a pesquisa.
           </p>
         </div>
       ) : (
+        /* ====================================
+           TABELA
+        ==================================== */
+
         <div className="tabela-container">
           <table className="tabela-atletas">
             <thead>
               <tr>
                 <th>Matrícula</th>
+
                 <th>Atleta</th>
+
                 <th>Categoria</th>
+
                 <th>Responsável</th>
-                <th>Mensalidade</th>
+
+                <th>
+                  {mesNome}/{anoSelecionado}
+                </th>
+
                 <th>Ação</th>
               </tr>
             </thead>
@@ -178,15 +449,18 @@ export default function Mensalidades() {
             <tbody>
               {atletasFiltrados.map(
                 (atleta, index) => {
-                  const atrasada =
-                    atleta.mensalidade ===
-                    "atrasada";
+                  const pagamento =
+                    verificarPagamento(
+                      atleta.id
+                    );
 
                   const estaSalvando =
                     salvando === atleta.id;
 
                   return (
                     <tr key={atleta.id}>
+                      {/* MATRÍCULA */}
+
                       <td>
                         <strong className="matricula">
                           ADC
@@ -196,11 +470,15 @@ export default function Mensalidades() {
                         </strong>
                       </td>
 
+                      {/* NOME */}
+
                       <td>
                         <strong>
                           {atleta.nome}
                         </strong>
                       </td>
+
+                      {/* CATEGORIA */}
 
                       <td>
                         <span className="badge-categoria">
@@ -209,43 +487,63 @@ export default function Mensalidades() {
                         </span>
                       </td>
 
+                      {/* RESPONSÁVEL */}
+
                       <td>
                         {atleta.responsavel ||
                           "Não informado"}
                       </td>
 
+                      {/* STATUS */}
+
                       <td>
-                        {atrasada ? (
-                          <span className="status-mensalidade atrasada">
-                            ● Atrasada
+                        {pagamento ? (
+                          <span className="status-mensalidade em-dia">
+                            ● Pago
                           </span>
                         ) : (
-                          <span className="status-mensalidade em-dia">
-                            ● Em dia
+                          <span className="status-mensalidade atrasada">
+                            ● Pendente
                           </span>
                         )}
                       </td>
 
+                      {/* AÇÃO */}
+
                       <td>
-                        <button
-                          className={
-                            atrasada
-                              ? "botao-pagar"
-                              : "botao-pendente"
-                          }
-                          onClick={() =>
-                            alterarMensalidade(
-                              atleta
-                            )
-                          }
-                          disabled={estaSalvando}
-                        >
-                          {estaSalvando
-                            ? "Salvando..."
-                            : atrasada
-                            ? "💰 Marcar paga"
-                            : "↩️ Tornar pendente"}
-                        </button>
+                        {pagamento ? (
+                          <button
+                            className="botao-pendente"
+                            onClick={() =>
+                              alterarPagamento(
+                                atleta
+                              )
+                            }
+                            disabled={
+                              estaSalvando
+                            }
+                          >
+                            {estaSalvando
+                              ? "Salvando..."
+                              : "↩️ Tornar pendente"}
+                          </button>
+                        ) : (
+                          <button
+                            className="botao-pagar"
+                            onClick={() =>
+                              alterarPagamento(
+                                atleta
+                              )
+                            }
+                            disabled={
+                              estaSalvando
+                            }
+                          >
+                            {estaSalvando
+                              ? "Salvando..."
+                              : "💰 Marcar paga"}
+                          </button>
+                        )}
                       </td>
                     </tr>
                   );
