@@ -5,33 +5,73 @@ import Dashboard from "./pages/Dashboard";
 import Atletas from "./pages/Atletas";
 import Mensalidades from "./pages/Mensalidades";
 import Presenca from "./pages/Presenca";
+import Relatorios from "./pages/Relatorios";
+import Configuracoes from "./pages/Configuracoes";
+
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
   return (
     <Routes>
+      {/* LOGIN */}
       <Route
         path="/"
         element={<Login />}
       />
 
+      {/* ÁREA PROTEGIDA */}
       <Route
         path="/dashboard"
-        element={<Dashboard />}
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
       />
 
       <Route
         path="/atletas"
-        element={<Atletas />}
+        element={
+          <ProtectedRoute>
+            <Atletas />
+          </ProtectedRoute>
+        }
       />
 
       <Route
         path="/mensalidades"
-        element={<Mensalidades />}
+        element={
+          <ProtectedRoute>
+            <Mensalidades />
+          </ProtectedRoute>
+        }
       />
 
       <Route
         path="/presenca"
-        element={<Presenca />}
+        element={
+          <ProtectedRoute>
+            <Presenca />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/relatorios"
+        element={
+          <ProtectedRoute>
+            <Relatorios />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/configuracoes"
+        element={
+          <ProtectedRoute>
+            <Configuracoes />
+          </ProtectedRoute>
+        }
       />
     </Routes>
   );

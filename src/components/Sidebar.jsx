@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import {
   FaHome,
@@ -9,58 +9,94 @@ import {
   FaCog,
 } from "react-icons/fa";
 
+<img
+  src="/escudo-adc.png"
+  alt="Escudo ADC"
+/>
+
 export default function Sidebar() {
+  const links = [
+    {
+      to: "/dashboard",
+      icon: <FaHome />,
+      label: "Dashboard",
+    },
+    {
+      to: "/atletas",
+      icon: <FaUsers />,
+      label: "Atletas",
+    },
+    {
+      to: "/mensalidades",
+      icon: <FaMoneyBill />,
+      label: "Mensalidades",
+    },
+    {
+      to: "/presenca",
+      icon: <FaClipboardCheck />,
+      label: "Presença",
+    },
+    {
+      to: "/relatorios",
+      icon: <FaChartBar />,
+      label: "Relatórios",
+    },
+    {
+      to: "/configuracoes",
+      icon: <FaCog />,
+      label: "Configurações",
+    },
+  ];
+
   return (
-    <div
-      style={{
-        width: "260px",
-        height: "100vh",
-        background: "#0A2A66",
-        color: "white",
-        padding: "20px",
-        boxSizing: "border-box",
-      }}
-    >
-      <h2
-        style={{
-          color: "#FFD700",
-          marginBottom: "30px",
-        }}
-      >
-        🐊 ADC Manager
-      </h2>
+    <aside className="sidebar">
+      
+      {/* LOGO */}
+      <div className="sidebar-logo">
+        <img
+          src="/escudo-adc.png"
+          alt="Escudo da Associação Desportiva Cicynho"
+        />
 
-      <nav
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "18px",
-        }}
-      >
-        <Link to="/dashboard">
-          <FaHome /> Dashboard
-        </Link>
+        <div>
+          <h2>ADC Manager</h2>
+          <span>Associação Desportiva Cicynho</span>
+        </div>
+      </div>
 
-        <Link to="/atletas">
-          <FaUsers /> Atletas
-        </Link>
+      {/* MENU */}
+      <nav className="sidebar-menu">
+        {links.map((link) => (
+          <NavLink
+            key={link.to}
+            to={link.to}
+            className={({ isActive }) =>
+              isActive
+                ? "sidebar-link active"
+                : "sidebar-link"
+            }
+          >
+            <span className="sidebar-icon">
+              {link.icon}
+            </span>
 
-        <Link to="/mensalidades">
-          <FaMoneyBill /> Mensalidades
-        </Link>
-
-        <Link to="/presenca">
-          <FaClipboardCheck /> Presença
-        </Link>
-
-        <Link to="/relatorios">
-          <FaChartBar /> Relatórios
-        </Link>
-
-        <Link to="/configuracoes">
-          <FaCog /> Configurações
-        </Link>
+            <span>{link.label}</span>
+          </NavLink>
+        ))}
       </nav>
-    </div>
+
+      {/* RODAPÉ */}
+      <div className="sidebar-footer">
+        <img
+          src="/escudo-adc.png"
+          alt="ADC"
+        />
+
+        <div>
+          <strong>ADC Manager</strong>
+          <span>Sistema de gestão</span>
+        </div>
+      </div>
+    </aside>
   );
 }

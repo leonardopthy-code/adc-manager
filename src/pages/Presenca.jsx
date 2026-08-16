@@ -22,15 +22,10 @@ export default function Presenca() {
   const [salvando, setSalvando] =
     useState(null);
 
-  // ==========================================
-  // CARREGAR ATLETAS
-  // ==========================================
-
   useEffect(() => {
     async function carregarAtletas() {
       try {
         const dados = await listarAtletas();
-
         setAtletas(dados);
       } catch (erro) {
         console.error(
@@ -44,10 +39,6 @@ export default function Presenca() {
 
     carregarAtletas();
   }, []);
-
-  // ==========================================
-  // CARREGAR PRESENÇAS DA DATA/TREINO
-  // ==========================================
 
   useEffect(() => {
     async function carregarPresencas() {
@@ -79,10 +70,6 @@ export default function Presenca() {
 
     carregarPresencas();
   }, [data, tipoTreino]);
-
-  // ==========================================
-  // ALTERAR PRESENÇA
-  // ==========================================
 
   async function alterarPresenca(atleta) {
     const novoStatus =
@@ -124,54 +111,39 @@ export default function Presenca() {
   const faltas =
     atletas.length - presentes;
 
+  const percentual =
+    atletas.length > 0
+      ? Math.round(
+          (presentes /
+            atletas.length) *
+            100
+        )
+      : 0;
+
   return (
     <MainLayout>
       {/* CABEÇALHO */}
 
-      <div
-        style={{
-          marginBottom: "25px",
-        }}
-      >
-        <h1
-          style={{
-            color: "#0B2D6B",
-            marginBottom: "5px",
-          }}
-        >
-          Presença
-        </h1>
+      <div className="atletas-header">
+        <div>
+          <span className="dashboard-badge">
+            CONTROLE DE TREINO
+          </span>
 
-        <p style={{ color: "#777" }}>
-          Controle de presença dos atletas da ADC.
-        </p>
+          <h1>Presença</h1>
+
+          <p>
+            Controle de presença dos atletas da ADC.
+          </p>
+        </div>
       </div>
 
       {/* FILTROS */}
 
-      <div
-        style={{
-          background: "#fff",
-          padding: "20px",
-          borderRadius: "15px",
-          marginBottom: "25px",
-          boxShadow:
-            "0 5px 15px rgba(0,0,0,.08)",
-          display: "flex",
-          gap: "20px",
-          flexWrap: "wrap",
-        }}
-      >
-        <div>
-          <label
-            style={{
-              display: "block",
-              fontWeight: "600",
-              marginBottom: "7px",
-            }}
-          >
-            Data
-          </label>
+      <div className="presenca-filtros">
+
+        <div className="presenca-campo">
+          <label>Data do treino</label>
 
           <input
             type="date"
@@ -179,191 +151,137 @@ export default function Presenca() {
             onChange={(e) =>
               setData(e.target.value)
             }
-            style={{
-              padding: "11px",
-              border: "1px solid #ddd",
-              borderRadius: "8px",
-            }}
           />
         </div>
 
-        <div>
-          <label
-            style={{
-              display: "block",
-              fontWeight: "600",
-              marginBottom: "7px",
-            }}
-          >
-            Treino
-          </label>
+        <div className="presenca-campo">
+          <label>Turno do treino</label>
 
           <select
             value={tipoTreino}
             onChange={(e) =>
               setTipoTreino(e.target.value)
             }
-            style={{
-              padding: "11px",
-              border: "1px solid #ddd",
-              borderRadius: "8px",
-            }}
           >
             <option>Matutino</option>
             <option>Vespertino</option>
             <option>Noturno</option>
           </select>
         </div>
+
+        <div className="presenca-referencia">
+          <span>TREINO SELECIONADO</span>
+
+          <strong>
+            ⚽ {tipoTreino}
+          </strong>
+
+          <small>
+            {data}
+          </small>
+        </div>
+
       </div>
 
-      {/* RESUMO */}
+      {/* CARDS */}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: "20px",
-          marginBottom: "25px",
-        }}
-      >
-        <div
-          style={{
-            background: "#fff",
-            padding: "20px",
-            borderRadius: "15px",
-            borderLeft:
-              "6px solid #0B2D6B",
-          }}
-        >
-          <small>Total</small>
+      <div className="presenca-cards">
 
-          <h2
-            style={{
-              color: "#0B2D6B",
-              marginTop: "8px",
-            }}
-          >
-            {atletas.length}
-          </h2>
+        <div className="presenca-card presenca-total">
+          <div className="presenca-card-icone">
+            👥
+          </div>
+
+          <div>
+            <span>Total de atletas</span>
+            <strong>{atletas.length}</strong>
+          </div>
         </div>
 
-        <div
-          style={{
-            background: "#fff",
-            padding: "20px",
-            borderRadius: "15px",
-            borderLeft:
-              "6px solid #28a745",
-          }}
-        >
-          <small>Presentes</small>
+        <div className="presenca-card presenca-presentes">
+          <div className="presenca-card-icone">
+            ✅
+          </div>
 
-          <h2
-            style={{
-              color: "#28a745",
-              marginTop: "8px",
-            }}
-          >
-            {presentes}
-          </h2>
+          <div>
+            <span>Presentes</span>
+            <strong>{presentes}</strong>
+          </div>
         </div>
 
-        <div
-          style={{
-            background: "#fff",
-            padding: "20px",
-            borderRadius: "15px",
-            borderLeft:
-              "6px solid #dc3545",
-          }}
-        >
-          <small>Faltas</small>
+        <div className="presenca-card presenca-faltas">
+          <div className="presenca-card-icone">
+            ❌
+          </div>
 
-          <h2
-            style={{
-              color: "#dc3545",
-              marginTop: "8px",
-            }}
-          >
-            {faltas}
-          </h2>
+          <div>
+            <span>Faltas</span>
+            <strong>{faltas}</strong>
+          </div>
         </div>
+
+        <div className="presenca-card presenca-frequencia">
+          <div className="presenca-card-icone">
+            📊
+          </div>
+
+          <div>
+            <span>Frequência</span>
+            <strong>
+              {percentual}%
+            </strong>
+          </div>
+        </div>
+
       </div>
 
       {/* LISTA */}
 
-      <div
-        style={{
-          background: "#fff",
-          borderRadius: "15px",
-          overflow: "hidden",
-          boxShadow:
-            "0 5px 15px rgba(0,0,0,.08)",
-        }}
-      >
-        <div
-          style={{
-            padding: "20px",
-            borderBottom:
-              "1px solid #eee",
-          }}
-        >
-          <h2
-            style={{
-              margin: 0,
-              color: "#0B2D6B",
-            }}
-          >
-            Lista de atletas
-          </h2>
+      <div className="presenca-lista">
 
-          <p
-            style={{
-              color: "#777",
-              marginTop: "5px",
-            }}
-          >
-            {tipoTreino} — {data}
-          </p>
+        <div className="presenca-lista-header">
+          <div>
+            <span className="box-mini-title">
+              CHAMADA
+            </span>
+
+            <h2>Lista de atletas</h2>
+
+            <p>
+              {tipoTreino} — {data}
+            </p>
+          </div>
+
+          <div className="presenca-resumo-mini">
+            <span>
+              {presentes} presentes
+            </span>
+
+            <span>
+              {faltas} faltas
+            </span>
+          </div>
         </div>
 
         {carregando ? (
-          <div
-            style={{
-              padding: "40px",
-              textAlign: "center",
-            }}
-          >
+          <div className="presenca-carregando">
             Carregando atletas...
           </div>
         ) : atletas.length === 0 ? (
-          <div
-            style={{
-              padding: "40px",
-              textAlign: "center",
-            }}
-          >
+          <div className="presenca-vazio">
+            <div>⚽</div>
+
             <h2>
               Nenhum atleta cadastrado
             </h2>
 
-            <p
-              style={{
-                color: "#777",
-                marginTop: "10px",
-              }}
-            >
-              Cadastre atletas para registrar
-              presença.
+            <p>
+              Cadastre atletas para registrar presença.
             </p>
           </div>
         ) : (
-          <div
-            style={{
-              padding: "10px 20px 20px",
-            }}
-          >
+          <div className="presenca-atletas">
+
             {atletas.map((atleta) => {
               const presente =
                 presencas[atleta.id];
@@ -371,62 +289,48 @@ export default function Presenca() {
               const estaSalvando =
                 salvando === atleta.id;
 
+              const inicial =
+                atleta.nome
+                  ?.charAt(0)
+                  .toUpperCase() || "A";
+
               return (
                 <div
                   key={atleta.id}
-                  style={{
-                    display: "flex",
-                    justifyContent:
-                      "space-between",
-                    alignItems: "center",
-                    padding: "15px",
-                    borderBottom:
-                      "1px solid #eee",
-                  }}
+                  className="presenca-atleta"
                 >
-                  <div>
-                    <strong>
-                      {atleta.nome}
-                    </strong>
 
-                    <div
-                      style={{
-                        color: "#777",
-                        fontSize: "14px",
-                        marginTop: "3px",
-                      }}
-                    >
-                      {atleta.categoria ||
-                        "Sem categoria"}
+                  <div className="presenca-atleta-info">
+
+                    <div className="presenca-avatar">
+                      {inicial}
                     </div>
+
+                    <div>
+                      <strong>
+                        {atleta.nome}
+                      </strong>
+
+                      <span>
+                        {atleta.categoria ||
+                          "Sem categoria"}
+                      </span>
+                    </div>
+
                   </div>
 
                   <button
+                    className={
+                      presente
+                        ? "presenca-botao presente"
+                        : "presenca-botao falta"
+                    }
                     onClick={() =>
                       alterarPresenca(
                         atleta
                       )
                     }
                     disabled={estaSalvando}
-                    style={{
-                      width: "auto",
-                      minWidth: "125px",
-                      padding:
-                        "10px 18px",
-                      border: "none",
-                      borderRadius: "8px",
-                      cursor: estaSalvando
-                        ? "wait"
-                        : "pointer",
-                      background: presente
-                        ? "#28a745"
-                        : "#dc3545",
-                      color: "#fff",
-                      fontWeight: "600",
-                      opacity: estaSalvando
-                        ? 0.7
-                        : 1,
-                    }}
                   >
                     {estaSalvando
                       ? "Salvando..."
@@ -434,11 +338,14 @@ export default function Presenca() {
                       ? "✓ Presente"
                       : "✕ Falta"}
                   </button>
+
                 </div>
               );
             })}
+
           </div>
         )}
+
       </div>
     </MainLayout>
   );

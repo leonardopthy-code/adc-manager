@@ -40,10 +40,6 @@ export default function Mensalidades() {
     hoje.getFullYear()
   );
 
-  // ==========================================
-  // CARREGAR ATLETAS E PAGAMENTOS
-  // ==========================================
-
   useEffect(() => {
     async function carregarDados() {
       setCarregando(true);
@@ -73,10 +69,6 @@ export default function Mensalidades() {
     carregarDados();
   }, [mesSelecionado, anoSelecionado]);
 
-  // ==========================================
-  // VERIFICAR SE O ATLETA PAGOU
-  // ==========================================
-
   function verificarPagamento(atletaId) {
     return pagamentos.find(
       (pagamento) =>
@@ -84,10 +76,6 @@ export default function Mensalidades() {
         pagamento.status === "pago"
     );
   }
-
-  // ==========================================
-  // PAGAR / TORNAR PENDENTE
-  // ==========================================
 
   async function alterarPagamento(atleta) {
     const pagamento = verificarPagamento(
@@ -97,17 +85,13 @@ export default function Mensalidades() {
     try {
       setSalvando(atleta.id);
 
-      // Se já está pago, torna pendente
       if (pagamento) {
         await tornarPagamentoPendente(
           atleta.id,
           mesSelecionado,
           anoSelecionado
         );
-      }
-
-      // Se está pendente, registra pagamento
-      else {
+      } else {
         await registrarPagamento(
           atleta.id,
           atleta.nome,
@@ -117,7 +101,6 @@ export default function Mensalidades() {
         );
       }
 
-      // Recarrega os pagamentos do mês
       const pagamentosAtualizados =
         await listarPagamentos(
           mesSelecionado,
@@ -141,20 +124,12 @@ export default function Mensalidades() {
     }
   }
 
-  // ==========================================
-  // FILTRO
-  // ==========================================
-
   const atletasFiltrados = atletas.filter(
     (atleta) =>
       atleta.nome
         ?.toLowerCase()
         .includes(busca.toLowerCase())
   );
-
-  // ==========================================
-  // ESTATÍSTICAS
-  // ==========================================
 
   const totalAtletas = atletas.length;
 
@@ -182,16 +157,16 @@ export default function Mensalidades() {
         mes.numero === mesSelecionado
     )?.nome || "";
 
-  // ==========================================
-  // TELA
-  // ==========================================
-
   return (
     <MainLayout>
       {/* CABEÇALHO */}
 
       <div className="atletas-header">
         <div>
+          <span className="dashboard-badge">
+            FINANCEIRO
+          </span>
+
           <h1>Mensalidades</h1>
 
           <p>
@@ -200,34 +175,11 @@ export default function Mensalidades() {
         </div>
       </div>
 
-      {/* ======================================
-          SELEÇÃO DO MÊS
-      ====================================== */}
+      {/* PERÍODO */}
 
-      <div
-        style={{
-          background: "#fff",
-          padding: "20px",
-          borderRadius: "15px",
-          marginBottom: "25px",
-          boxShadow:
-            "0 5px 15px rgba(0,0,0,.08)",
-          display: "flex",
-          gap: "15px",
-          alignItems: "end",
-          flexWrap: "wrap",
-        }}
-      >
-        <div>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "7px",
-              fontWeight: "600",
-            }}
-          >
-            Mês de referência
-          </label>
+      <div className="mensalidades-periodo">
+        <div className="periodo-campo">
+          <label>Mês de referência</label>
 
           <select
             value={mesSelecionado}
@@ -236,12 +188,6 @@ export default function Mensalidades() {
                 Number(e.target.value)
               )
             }
-            style={{
-              padding: "11px",
-              borderRadius: "8px",
-              border: "1px solid #ddd",
-              fontSize: "15px",
-            }}
           >
             {meses.map((mes) => (
               <option
@@ -254,18 +200,8 @@ export default function Mensalidades() {
           </select>
         </div>
 
-        {/* ANO */}
-
-        <div>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "7px",
-              fontWeight: "600",
-            }}
-          >
-            Ano
-          </label>
+        <div className="periodo-campo">
+          <label>Ano</label>
 
           <select
             value={anoSelecionado}
@@ -274,88 +210,51 @@ export default function Mensalidades() {
                 Number(e.target.value)
               )
             }
-            style={{
-              padding: "11px",
-              borderRadius: "8px",
-              border: "1px solid #ddd",
-              fontSize: "15px",
-            }}
           >
-            <option value={2026}>
-              2026
-            </option>
-
-            <option value={2027}>
-              2027
-            </option>
-
-            <option value={2028}>
-              2028
-            </option>
+            <option value={2026}>2026</option>
+            <option value={2027}>2027</option>
+            <option value={2028}>2028</option>
           </select>
         </div>
 
-        {/* REFERÊNCIA */}
+        <div className="periodo-atual">
+          <span>PERÍODO SELECIONADO</span>
 
-        <div
-          style={{
-            fontWeight: "700",
-            color: "#0B2D6B",
-            paddingBottom: "10px",
-          }}
-        >
-          📅 {mesNome}/{anoSelecionado}
+          <strong>
+            📅 {mesNome}/{anoSelecionado}
+          </strong>
         </div>
       </div>
 
-      {/* ======================================
-          CARDS
-      ====================================== */}
+      {/* CARDS */}
 
       <div className="cards-mensalidades">
-        {/* TOTAL */}
-
         <div className="card-mensalidade">
           <span>👥</span>
 
           <div>
             <small>Total de atletas</small>
-
-            <strong>
-              {totalAtletas}
-            </strong>
+            <strong>{totalAtletas}</strong>
           </div>
         </div>
-
-        {/* PAGOS */}
 
         <div className="card-mensalidade card-verde">
           <span>✅</span>
 
           <div>
             <small>Pagas</small>
-
-            <strong>
-              {totalPagos}
-            </strong>
+            <strong>{totalPagos}</strong>
           </div>
         </div>
-
-        {/* PENDENTES */}
 
         <div className="card-mensalidade card-vermelho">
           <span>⚠️</span>
 
           <div>
             <small>Pendentes</small>
-
-            <strong>
-              {totalPendentes}
-            </strong>
+            <strong>{totalPendentes}</strong>
           </div>
         </div>
-
-        {/* RECEBIDO */}
 
         <div className="card-mensalidade card-amarelo">
           <span>💰</span>
@@ -364,8 +263,7 @@ export default function Mensalidades() {
             <small>Recebido</small>
 
             <strong>
-              R${" "}
-              {valorRecebido
+              R$ {valorRecebido
                 .toFixed(2)
                 .replace(".", ",")}
             </strong>
@@ -373,15 +271,11 @@ export default function Mensalidades() {
         </div>
       </div>
 
-      {/* ======================================
-          BUSCA
-      ====================================== */}
+      {/* BUSCA */}
 
       <div className="filtros-atletas">
         <div className="campo-filtro busca-atleta">
-          <label>
-            Buscar atleta
-          </label>
+          <label>Buscar atleta</label>
 
           <input
             type="text"
@@ -394,54 +288,36 @@ export default function Mensalidades() {
         </div>
       </div>
 
-      {/* ======================================
-          CARREGANDO
-      ====================================== */}
+      {/* CONTEÚDO */}
 
       {carregando ? (
         <div className="dashboard-carregando">
           Carregando mensalidades...
         </div>
       ) : atletasFiltrados.length === 0 ? (
-        /* ====================================
-           NENHUM ATLETA
-        ==================================== */
-
         <div className="atletas-vazio">
           <div className="vazio-icone">
             💰
           </div>
 
-          <h2>
-            Nenhum atleta encontrado
-          </h2>
+          <h2>Nenhum atleta encontrado</h2>
 
           <p>
-            Cadastre um atleta primeiro ou
-            altere a pesquisa.
+            Cadastre um atleta primeiro ou altere a pesquisa.
           </p>
         </div>
       ) : (
-        /* ====================================
-           TABELA
-        ==================================== */
-
         <div className="tabela-container">
           <table className="tabela-atletas">
             <thead>
               <tr>
                 <th>Matrícula</th>
-
                 <th>Atleta</th>
-
                 <th>Categoria</th>
-
                 <th>Responsável</th>
-
                 <th>
                   {mesNome}/{anoSelecionado}
                 </th>
-
                 <th>Ação</th>
               </tr>
             </thead>
@@ -459,8 +335,6 @@ export default function Mensalidades() {
 
                   return (
                     <tr key={atleta.id}>
-                      {/* MATRÍCULA */}
-
                       <td>
                         <strong className="matricula">
                           ADC
@@ -470,15 +344,11 @@ export default function Mensalidades() {
                         </strong>
                       </td>
 
-                      {/* NOME */}
-
                       <td>
                         <strong>
                           {atleta.nome}
                         </strong>
                       </td>
-
-                      {/* CATEGORIA */}
 
                       <td>
                         <span className="badge-categoria">
@@ -487,14 +357,10 @@ export default function Mensalidades() {
                         </span>
                       </td>
 
-                      {/* RESPONSÁVEL */}
-
                       <td>
                         {atleta.responsavel ||
                           "Não informado"}
                       </td>
-
-                      {/* STATUS */}
 
                       <td>
                         {pagamento ? (
@@ -507,8 +373,6 @@ export default function Mensalidades() {
                           </span>
                         )}
                       </td>
-
-                      {/* AÇÃO */}
 
                       <td>
                         {pagamento ? (

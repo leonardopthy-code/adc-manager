@@ -5,24 +5,38 @@ const dadosIniciais = {
   categoria: "",
   nascimento: "",
   posicao: "",
+  escola: "",
   responsavel: "",
   telefone: "",
   mensalidade: "em-dia",
 };
 
-export default function FormAtleta({ onSalvar, atletaEditando }) {
-  const [dados, setDados] = useState(dadosIniciais);
+export default function FormAtleta({
+  onSalvar,
+  atletaEditando,
+}) {
+  const [dados, setDados] =
+    useState(dadosIniciais);
 
   useEffect(() => {
     if (atletaEditando) {
       setDados({
         nome: atletaEditando.nome || "",
-        categoria: atletaEditando.categoria || "",
-        nascimento: atletaEditando.nascimento || "",
-        posicao: atletaEditando.posicao || "",
-        responsavel: atletaEditando.responsavel || "",
-        telefone: atletaEditando.telefone || "",
-        mensalidade: atletaEditando.mensalidade || "em-dia",
+        categoria:
+          atletaEditando.categoria || "",
+        nascimento:
+          atletaEditando.nascimento || "",
+        posicao:
+          atletaEditando.posicao || "",
+        escola:
+          atletaEditando.escola || "",
+        responsavel:
+          atletaEditando.responsavel || "",
+        telefone:
+          atletaEditando.telefone || "",
+        mensalidade:
+          atletaEditando.mensalidade ||
+          "em-dia",
       });
     } else {
       setDados(dadosIniciais);
@@ -45,7 +59,9 @@ export default function FormAtleta({ onSalvar, atletaEditando }) {
     }
 
     if (!dados.categoria) {
-      alert("Selecione a categoria do atleta.");
+      alert(
+        "Selecione a categoria do atleta."
+      );
       return;
     }
 
@@ -57,8 +73,8 @@ export default function FormAtleta({ onSalvar, atletaEditando }) {
   }
 
   return (
-    <form className="form-atleta" onSubmit={salvar}>
-      <div className="form-titulo">
+    <form onSubmit={salvar}>
+      <div className="form-cabecalho">
         <h2>
           {atletaEditando
             ? "Editar Atleta"
@@ -73,6 +89,8 @@ export default function FormAtleta({ onSalvar, atletaEditando }) {
       </div>
 
       <div className="form-grid">
+        {/* NOME */}
+
         <div className="campo-form">
           <label>Nome completo</label>
 
@@ -83,6 +101,8 @@ export default function FormAtleta({ onSalvar, atletaEditando }) {
             onChange={alterarCampo}
           />
         </div>
+
+        {/* CATEGORIA */}
 
         <div className="campo-form">
           <label>Categoria</label>
@@ -96,19 +116,43 @@ export default function FormAtleta({ onSalvar, atletaEditando }) {
               Selecione a categoria
             </option>
 
-            <option value="Sub-06">Sub-06</option>
-            <option value="Sub-07">Sub-07</option>
-            <option value="Sub-08">Sub-08</option>
-            <option value="Sub-09">Sub-09</option>
-            <option value="Sub-10">Sub-10</option>
-            <option value="Sub-11">Sub-11</option>
-            <option value="Sub-12">Sub-12</option>
-            <option value="Sub-13">Sub-13</option>
-            <option value="Sub-14">Sub-14</option>
-            <option value="Sub-15">Sub-15</option>
-            <option value="Sub-16">Sub-16</option>
+            <option value="Sub-06">
+              Sub-06
+            </option>
+            <option value="Sub-07">
+              Sub-07
+            </option>
+            <option value="Sub-08">
+              Sub-08
+            </option>
+            <option value="Sub-09">
+              Sub-09
+            </option>
+            <option value="Sub-10">
+              Sub-10
+            </option>
+            <option value="Sub-11">
+              Sub-11
+            </option>
+            <option value="Sub-12">
+              Sub-12
+            </option>
+            <option value="Sub-13">
+              Sub-13
+            </option>
+            <option value="Sub-14">
+              Sub-14
+            </option>
+            <option value="Sub-15">
+              Sub-15
+            </option>
+            <option value="Sub-16">
+              Sub-16
+            </option>
           </select>
         </div>
+
+        {/* NASCIMENTO */}
 
         <div className="campo-form">
           <label>Data de nascimento</label>
@@ -120,6 +164,8 @@ export default function FormAtleta({ onSalvar, atletaEditando }) {
             onChange={alterarCampo}
           />
         </div>
+
+        {/* POSIÇÃO */}
 
         <div className="campo-form">
           <label>Posição</label>
@@ -133,25 +179,59 @@ export default function FormAtleta({ onSalvar, atletaEditando }) {
               Selecione a posição
             </option>
 
-            <option value="Goleiro">Goleiro</option>
+            <option value="Goleiro">
+              Goleiro
+            </option>
+
             <option value="Lateral Direito">
               Lateral Direito
             </option>
+
             <option value="Lateral Esquerdo">
               Lateral Esquerdo
             </option>
-            <option value="Zagueiro">Zagueiro</option>
-            <option value="Volante">Volante</option>
-            <option value="Meia">Meia</option>
+
+            <option value="Zagueiro">
+              Zagueiro
+            </option>
+
+            <option value="Volante">
+              Volante
+            </option>
+
+            <option value="Meia">
+              Meia
+            </option>
+
             <option value="Ponta Direita">
               Ponta Direita
             </option>
+
             <option value="Ponta Esquerda">
               Ponta Esquerda
             </option>
-            <option value="Atacante">Atacante</option>
+
+            <option value="Atacante">
+              Atacante
+            </option>
           </select>
         </div>
+
+        {/* ESCOLA */}
+
+        <div className="campo-form">
+          <label>Escola</label>
+
+          <input
+            type="text"
+            name="escola"
+            placeholder="Nome da escola"
+            value={dados.escola}
+            onChange={alterarCampo}
+          />
+        </div>
+
+        {/* RESPONSÁVEL */}
 
         <div className="campo-form">
           <label>Responsável</label>
@@ -164,6 +244,8 @@ export default function FormAtleta({ onSalvar, atletaEditando }) {
           />
         </div>
 
+        {/* TELEFONE */}
+
         <div className="campo-form">
           <label>Telefone</label>
 
@@ -174,6 +256,8 @@ export default function FormAtleta({ onSalvar, atletaEditando }) {
             onChange={alterarCampo}
           />
         </div>
+
+        {/* MENSALIDADE */}
 
         <div className="campo-form">
           <label>Mensalidade</label>
