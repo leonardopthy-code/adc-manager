@@ -19,7 +19,10 @@ const presencasRef = collection(
   "presencas"
 );
 
-// Buscar presenças
+// ========================================
+// BUSCAR PRESENÇAS POR DATA E TREINO
+// ========================================
+
 export async function buscarPresencas(
   data,
   treino
@@ -30,9 +33,8 @@ export async function buscarPresencas(
     where("treino", "==", treino)
   );
 
-  const snapshot = await getDocs(
-    consulta
-  );
+  const snapshot =
+    await getDocs(consulta);
 
   return snapshot.docs.map(
     (documento) => ({
@@ -42,7 +44,55 @@ export async function buscarPresencas(
   );
 }
 
-// Salvar ou atualizar presença
+// ========================================
+// BUSCAR HISTÓRICO DE UM ATLETA
+// ========================================
+
+export async function buscarPresencasDoAtleta(
+  atletaId
+) {
+  try {
+    const consulta = query(
+      presencasRef,
+      where(
+        "atletaId",
+        "==",
+        atletaId
+      )
+    );
+
+    const snapshot =
+      await getDocs(consulta);
+
+    const presencas =
+      snapshot.docs.map(
+        (documento) => ({
+          id: documento.id,
+          ...documento.data(),
+        })
+      );
+
+    // Organiza da data mais recente para a mais antiga
+    return presencas.sort(
+      (a, b) =>
+        String(b.data || "").localeCompare(
+          String(a.data || "")
+        )
+    );
+  } catch (erro) {
+    console.error(
+      "Erro ao buscar histórico de presença:",
+      erro
+    );
+
+    throw erro;
+  }
+}
+
+// ========================================
+// SALVAR OU ATUALIZAR PRESENÇA
+// ========================================
+
 export async function salvarPresenca({
   atletaId,
   atletaNome,
@@ -52,14 +102,25 @@ export async function salvarPresenca({
 }) {
   const consulta = query(
     presencasRef,
-    where("atletaId", "==", atletaId),
-    where("data", "==", data),
-    where("treino", "==", treino)
+    where(
+      "atletaId",
+      "==",
+      atletaId
+    ),
+    where(
+      "data",
+      "==",
+      data
+    ),
+    where(
+      "treino",
+      "==",
+      treino
+    )
   );
 
-  const snapshot = await getDocs(
-    consulta
-  );
+  const snapshot =
+    await getDocs(consulta);
 
   // Se já existe, atualiza
   if (!snapshot.empty) {
@@ -90,18 +151,19 @@ export async function salvarPresenca({
   }
 
   // Se não existe, cria
-  const documento = await addDoc(
-    presencasRef,
-    {
-      atletaId,
-      atletaNome,
-      data,
-      treino,
-      presente,
-      criadoEm:
-        serverTimestamp(),
-    }
-  );
+  const documento =
+    await addDoc(
+      presencasRef,
+      {
+        atletaId,
+        atletaNome,
+        data,
+        treino,
+        presente,
+        criadoEm:
+          serverTimestamp(),
+      }
+    );
 
   return {
     id: documento.id,

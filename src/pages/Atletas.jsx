@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import MainLayout from "../layouts/MainLayout";
 import FormAtleta from "../components/FormAtleta";
 
@@ -10,22 +12,48 @@ import {
 } from "../services/atletasService";
 
 export default function Atletas() {
-  const [mostrarFormulario, setMostrarFormulario] = useState(false);
-  const [atletas, setAtletas] = useState([]);
-  const [atletaEditando, setAtletaEditando] = useState(null);
-  const [carregando, setCarregando] = useState(true);
+  const navigate = useNavigate();
 
-  const [busca, setBusca] = useState("");
-  const [filtroCategoria, setFiltroCategoria] = useState("");
-  const [filtroMensalidade, setFiltroMensalidade] = useState("");
+  const [mostrarFormulario, setMostrarFormulario] =
+    useState(false);
+
+  const [atletas, setAtletas] =
+    useState([]);
+
+  const [atletaEditando, setAtletaEditando] =
+    useState(null);
+
+  const [carregando, setCarregando] =
+    useState(true);
+
+  const [busca, setBusca] =
+    useState("");
+
+  const [
+    filtroCategoria,
+    setFiltroCategoria,
+  ] = useState("");
+
+  const [
+    filtroMensalidade,
+    setFiltroMensalidade,
+  ] = useState("");
 
   async function carregarAtletas() {
     try {
-      const dados = await listarAtletas();
+      const dados =
+        await listarAtletas();
+
       setAtletas(dados);
     } catch (erro) {
-      console.error("Erro ao carregar atletas:", erro);
-      alert("Não foi possível carregar os atletas.");
+      console.error(
+        "Erro ao carregar atletas:",
+        erro
+      );
+
+      alert(
+        "Não foi possível carregar os atletas."
+      );
     } finally {
       setCarregando(false);
     }
@@ -35,7 +63,9 @@ export default function Atletas() {
     carregarAtletas();
   }, []);
 
-  async function salvarAtleta(dadosAtleta) {
+  async function salvarAtleta(
+    dadosAtleta
+  ) {
     try {
       if (atletaEditando) {
         await editarAtleta(
@@ -45,7 +75,8 @@ export default function Atletas() {
 
         setAtletas((listaAtual) =>
           listaAtual.map((atleta) =>
-            atleta.id === atletaEditando.id
+            atleta.id ===
+            atletaEditando.id
               ? {
                   ...atleta,
                   ...dadosAtleta,
@@ -54,18 +85,23 @@ export default function Atletas() {
           )
         );
 
-        alert("Atleta atualizado com sucesso!");
-      } else {
-        const atleta = await adicionarAtleta(
-          dadosAtleta
+        alert(
+          "Atleta atualizado com sucesso!"
         );
+      } else {
+        const atleta =
+          await adicionarAtleta(
+            dadosAtleta
+          );
 
         setAtletas((listaAtual) => [
           ...listaAtual,
           atleta,
         ]);
 
-        alert("Atleta cadastrado com sucesso!");
+        alert(
+          "Atleta cadastrado com sucesso!"
+        );
       }
 
       setAtletaEditando(null);
@@ -100,9 +136,10 @@ export default function Atletas() {
   }
 
   async function removerAtleta(id) {
-    const confirmar = window.confirm(
-      "Tem certeza que deseja excluir este atleta?"
-    );
+    const confirmar =
+      window.confirm(
+        "Tem certeza que deseja excluir este atleta?"
+      );
 
     if (!confirmar) return;
 
@@ -111,7 +148,8 @@ export default function Atletas() {
 
       setAtletas((listaAtual) =>
         listaAtual.filter(
-          (atleta) => atleta.id !== id
+          (atleta) =>
+            atleta.id !== id
         )
       );
     } catch (erro) {
@@ -129,25 +167,32 @@ export default function Atletas() {
   const categorias = [
     ...new Set(
       atletas
-        .map((atleta) => atleta.categoria)
+        .map(
+          (atleta) =>
+            atleta.categoria
+        )
         .filter(Boolean)
     ),
   ].sort();
 
-  const atletasFiltrados = atletas.filter(
-    (atleta) => {
+  const atletasFiltrados =
+    atletas.filter((atleta) => {
       const nome =
-        atleta.nome?.toLowerCase() || "";
+        atleta.nome?.toLowerCase() ||
+        "";
 
       const termoBusca =
         busca.toLowerCase();
 
       const correspondeBusca =
-        nome.includes(termoBusca);
+        nome.includes(
+          termoBusca
+        );
 
       const correspondeCategoria =
         !filtroCategoria ||
-        atleta.categoria === filtroCategoria;
+        atleta.categoria ===
+          filtroCategoria;
 
       const correspondeMensalidade =
         !filtroMensalidade ||
@@ -159,17 +204,19 @@ export default function Atletas() {
         correspondeCategoria &&
         correspondeMensalidade
       );
-    }
-  );
+    });
 
   return (
     <MainLayout>
+
       <div className="atletas-header">
+
         <div>
           <h1>Atletas</h1>
 
           <p>
-            Gerencie os atletas cadastrados na ADC.
+            Gerencie os atletas
+            cadastrados na ADC.
           </p>
         </div>
 
@@ -189,12 +236,17 @@ export default function Atletas() {
             ? "Fechar"
             : "+ Novo Atleta"}
         </button>
+
       </div>
 
       {mostrarFormulario && (
         <FormAtleta
-          onSalvar={salvarAtleta}
-          atletaEditando={atletaEditando}
+          onSalvar={
+            salvarAtleta
+          }
+          atletaEditando={
+            atletaEditando
+          }
         />
       )}
 
@@ -204,25 +256,38 @@ export default function Atletas() {
         </div>
       ) : (
         <>
+
           <div className="filtros-atletas">
+
             <div className="campo-filtro busca-atleta">
-              <label>Buscar atleta</label>
+
+              <label>
+                Buscar atleta
+              </label>
 
               <input
                 type="text"
                 placeholder="Digite o nome..."
                 value={busca}
                 onChange={(e) =>
-                  setBusca(e.target.value)
+                  setBusca(
+                    e.target.value
+                  )
                 }
               />
+
             </div>
 
             <div className="campo-filtro">
-              <label>Categoria</label>
+
+              <label>
+                Categoria
+              </label>
 
               <select
-                value={filtroCategoria}
+                value={
+                  filtroCategoria
+                }
                 onChange={(e) =>
                   setFiltroCategoria(
                     e.target.value
@@ -236,21 +301,32 @@ export default function Atletas() {
                 {categorias.map(
                   (categoria) => (
                     <option
-                      key={categoria}
-                      value={categoria}
+                      key={
+                        categoria
+                      }
+                      value={
+                        categoria
+                      }
                     >
                       {categoria}
                     </option>
                   )
                 )}
+
               </select>
+
             </div>
 
             <div className="campo-filtro">
-              <label>Mensalidade</label>
+
+              <label>
+                Mensalidade
+              </label>
 
               <select
-                value={filtroMensalidade}
+                value={
+                  filtroMensalidade
+                }
                 onChange={(e) =>
                   setFiltroMensalidade(
                     e.target.value
@@ -268,18 +344,25 @@ export default function Atletas() {
                 <option value="atrasada">
                   Atrasada
                 </option>
+
               </select>
+
             </div>
+
           </div>
 
           <div className="resumo-atletas">
+
             <div>
               <strong>
-                {atletasFiltrados.length}
+                {
+                  atletasFiltrados.length
+                }
               </strong>
 
               <span>
-                {atletasFiltrados.length === 1
+                {atletasFiltrados.length ===
+                1
                   ? " atleta encontrado"
                   : " atletas encontrados"}
               </span>
@@ -292,17 +375,23 @@ export default function Atletas() {
                 className="limpar-filtros"
                 onClick={() => {
                   setBusca("");
-                  setFiltroCategoria("");
-                  setFiltroMensalidade("");
+                  setFiltroCategoria(
+                    ""
+                  );
+                  setFiltroMensalidade(
+                    ""
+                  );
                 }}
               >
                 Limpar filtros
               </button>
             )}
+
           </div>
 
           {atletas.length === 0 ? (
             <div className="atletas-vazio">
+
               <div className="vazio-icone">
                 👥
               </div>
@@ -312,21 +401,27 @@ export default function Atletas() {
               </h2>
 
               <p>
-                Clique em "+ Novo Atleta" para
-                cadastrar o primeiro atleta.
+                Clique em "+ Novo Atleta"
+                para cadastrar o primeiro
+                atleta.
               </p>
 
               <button
                 className="novo-atleta"
                 onClick={() =>
-                  setMostrarFormulario(true)
+                  setMostrarFormulario(
+                    true
+                  )
                 }
               >
                 + Cadastrar atleta
               </button>
+
             </div>
-          ) : atletasFiltrados.length === 0 ? (
+          ) : atletasFiltrados.length ===
+            0 ? (
             <div className="atletas-vazio">
+
               <div className="vazio-icone">
                 🔎
               </div>
@@ -336,13 +431,16 @@ export default function Atletas() {
               </h2>
 
               <p>
-                Tente alterar os filtros ou o nome
-                pesquisado.
+                Tente alterar os filtros
+                ou o nome pesquisado.
               </p>
+
             </div>
           ) : (
             <div className="tabela-container">
+
               <table className="tabela-atletas">
+
                 <thead>
                   <tr>
                     <th>Matrícula</th>
@@ -357,6 +455,7 @@ export default function Atletas() {
                 </thead>
 
                 <tbody>
+
                   {atletasFiltrados.map(
                     (atleta) => {
                       const indice =
@@ -371,27 +470,41 @@ export default function Atletas() {
                         "em-dia";
 
                       return (
-                        <tr key={atleta.id}>
+                        <tr
+                          key={
+                            atleta.id
+                          }
+                        >
+
                           <td>
                             <strong className="matricula">
                               ADC
                               {String(
-                                indice + 1
-                              ).padStart(4, "0")}
+                                indice +
+                                  1
+                              ).padStart(
+                                4,
+                                "0"
+                              )}
                             </strong>
                           </td>
 
                           <td>
                             <div className="atleta-tabela">
+
                               <div className="avatar-atleta">
                                 {atleta.nome
-                                  ?.charAt(0)
+                                  ?.charAt(
+                                    0
+                                  )
                                   .toUpperCase()}
                               </div>
 
                               <div>
                                 <strong>
-                                  {atleta.nome}
+                                  {
+                                    atleta.nome
+                                  }
                                 </strong>
 
                                 {atleta.nascimento && (
@@ -403,6 +516,7 @@ export default function Atletas() {
                                   </small>
                                 )}
                               </div>
+
                             </div>
                           </td>
 
@@ -443,6 +557,18 @@ export default function Atletas() {
 
                           <td>
                             <div className="acoes-atleta">
+
+                              <button
+                                className="botao-ficha"
+                                onClick={() =>
+                                  navigate(
+                                    `/atletas/${atleta.id}`
+                                  )
+                                }
+                              >
+                                👁️ Ver ficha
+                              </button>
+
                               <button
                                 className="botao-editar"
                                 onClick={() =>
@@ -464,18 +590,25 @@ export default function Atletas() {
                               >
                                 🗑️ Excluir
                               </button>
+
                             </div>
                           </td>
+
                         </tr>
                       );
                     }
                   )}
+
                 </tbody>
+
               </table>
+
             </div>
           )}
+
         </>
       )}
+
     </MainLayout>
   );
 }

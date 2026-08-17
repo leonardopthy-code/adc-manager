@@ -5565,4 +5565,1129 @@ main,
     font-size: 23px;
   }
 
+}/* =================================
+   FICHA DO ATLETA
+================================= */
+
+.detalhes-atleta-page {
+  width: 100%;
+}
+
+.detalhes-voltar {
+  width: auto;
+  background: transparent;
+  color: #0B2D6B;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0;
+  margin-bottom: 22px;
+}
+
+.detalhes-voltar:hover {
+  color: #F5C400;
+  transform: none;
+}
+
+
+/* CABEÇALHO */
+
+.detalhes-atleta-header {
+  background:
+    linear-gradient(
+      135deg,
+      #0B2D6B,
+      #123f87
+    );
+
+  border-radius: 18px;
+
+  padding: 28px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 20px;
+
+  margin-bottom: 24px;
+
+  box-shadow:
+    0 10px 28px
+    rgba(11,45,107,.15);
+}
+
+.detalhes-avatar {
+  width: 82px;
+  height: 82px;
+
+  min-width: 82px;
+
+  border-radius: 20px;
+
+  background: #F5C400;
+
+  color: #0B2D6B;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 30px;
+  font-weight: 900;
+
+  border:
+    4px solid
+    rgba(255,255,255,.15);
+}
+
+.detalhes-identidade h1 {
+  color: #fff;
+
+  font-size: 28px;
+
+  margin: 7px 0 10px;
+}
+
+.detalhes-identidade .dashboard-badge {
+  background:
+    rgba(245,196,0,.15);
+
+  color: #F5C400;
+}
+
+.detalhes-tags {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+}
+
+.detalhes-tags span {
+  padding: 6px 10px;
+
+  border-radius: 20px;
+
+  background:
+    rgba(255,255,255,.09);
+
+  color:
+    rgba(255,255,255,.85);
+
+  font-size: 10px;
+
+  font-weight: 600;
+}
+
+
+/* GRID */
+
+.detalhes-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 20px;
+}
+
+.detalhes-card {
+  background: #fff;
+
+  border: 1px solid #edf0f5;
+
+  border-radius: 16px;
+
+  padding: 23px;
+
+  box-shadow:
+    0 6px 20px
+    rgba(11,45,107,.05);
+}
+
+.detalhes-card-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  margin-bottom: 22px;
+}
+
+.detalhes-card-header h2 {
+  color: #0B2D6B;
+
+  font-size: 18px;
+
+  margin-top: 4px;
+}
+
+.detalhes-card-icon {
+  width: 40px;
+  height: 40px;
+
+  border-radius: 11px;
+
+  background:
+    rgba(11,45,107,.07);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+}
+
+
+/* DADOS */
+
+.detalhes-lista {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.detalhes-lista > div {
+  padding: 12px 0;
+
+  border-bottom:
+    1px solid #f0f1f4;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.detalhes-lista > div:first-child {
+  padding-top: 0;
+}
+
+.detalhes-lista > div:last-child {
+  border-bottom: none;
+
+  padding-bottom: 0;
+}
+
+.detalhes-lista span {
+  color: #999;
+
+  font-size: 11px;
+}
+
+.detalhes-lista strong {
+  color: #333;
+
+  font-size: 12px;
+
+  text-align: right;
+}
+
+
+/* STATUS */
+
+.detalhes-status.em-dia {
+  color: #28a745;
+}
+
+.detalhes-status.atrasada {
+  color: #dc3545;
+}
+
+.detalhes-id {
+  max-width: 230px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  color: #0B2D6B !important;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+  .detalhes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .detalhes-atleta-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    padding: 22px;
+  }
+
+  .detalhes-avatar {
+    width: 70px;
+    height: 70px;
+
+    min-width: 70px;
+  }
+
+  .detalhes-identidade h1 {
+    font-size: 23px;
+  }
+
+  .detalhes-lista > div {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 5px;
+  }
+
+  .detalhes-lista strong {
+    text-align: left;
+  }
+}.botao-ficha {
+  width: auto;
+
+  padding: 7px 10px;
+
+  border-radius: 7px;
+
+  background:
+    rgba(11,45,107,.08);
+
+  color: #0B2D6B;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: .2s;
+}
+
+.botao-ficha:hover {
+  background: #0B2D6B;
+  color: #fff;
+}/* =================================
+   FREQUÊNCIA NA FICHA DO ATLETA
+================================= */
+
+.detalhes-resumo {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.detalhes-resumo-card {
+  background: #fff;
+  border: 1px solid #edf0f5;
+  border-left: 5px solid #0B2D6B;
+  border-radius: 14px;
+  padding: 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  box-shadow:
+    0 5px 16px rgba(11,45,107,.05);
+}
+
+.detalhes-resumo-card > span {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+
+  border-radius: 11px;
+
+  background:
+    rgba(11,45,107,.07);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 19px;
+}
+
+.detalhes-resumo-card small {
+  display: block;
+  color: #999;
+  font-size: 10px;
+  margin-bottom: 3px;
+}
+
+.detalhes-resumo-card strong {
+  color: #0B2D6B;
+  font-size: 22px;
+}
+
+.resumo-verde {
+  border-left-color: #28a745;
+}
+
+.resumo-verde strong {
+  color: #28a745;
+}
+
+.resumo-vermelho {
+  border-left-color: #dc3545;
+}
+
+.resumo-vermelho strong {
+  color: #dc3545;
+}
+
+.resumo-amarelo {
+  border-left-color: #F5C400;
+}
+
+.resumo-amarelo strong {
+  color: #9b7b00;
+}
+
+
+/* HISTÓRICO */
+
+.detalhes-historico {
+  margin-top: 20px;
+
+  background: #fff;
+
+  border: 1px solid #edf0f5;
+
+  border-radius: 16px;
+
+  padding: 23px;
+
+  box-shadow:
+    0 6px 20px rgba(11,45,107,.05);
+}
+
+.detalhes-historico
+.detalhes-card-header p {
+  color: #999;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.detalhes-historico-lista {
+  display: flex;
+  flex-direction: column;
+}
+
+.detalhes-historico-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 13px 0;
+
+  border-bottom:
+    1px solid #f0f1f4;
+}
+
+.detalhes-historico-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.historico-data {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.historico-data strong {
+  color: #333;
+  font-size: 12px;
+}
+
+.historico-data span {
+  color: #999;
+  font-size: 10px;
+}
+
+.historico-status {
+  min-width: 90px;
+
+  padding: 6px 10px;
+
+  border-radius: 20px;
+
+  text-align: center;
+
+  font-size: 10px;
+
+  font-weight: 800;
+}
+
+.historico-status.presente {
+  background:
+    rgba(40,167,69,.10);
+
+  color: #218838;
+}
+
+.historico-status.falta {
+  background:
+    rgba(220,53,69,.09);
+
+  color: #dc3545;
+}
+
+.detalhes-historico-vazio {
+  padding: 30px;
+
+  text-align: center;
+
+  color: #999;
+
+  font-size: 12px;
+}
+
+
+/* RESPONSIVO */
+
+@media (max-width: 1000px) {
+  .detalhes-resumo {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 550px) {
+  .detalhes-resumo {
+    grid-template-columns: 1fr;
+  }
+}/* =================================
+   FINANCEIRO NA FICHA DO ATLETA
+================================= */
+
+.detalhes-financeiro-resumo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.financeiro-resumo-card {
+  background: #fff;
+
+  border: 1px solid #edf0f5;
+  border-left: 5px solid #0B2D6B;
+
+  border-radius: 14px;
+
+  padding: 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  box-shadow:
+    0 5px 16px rgba(11,45,107,.05);
+}
+
+.financeiro-resumo-card > span {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+
+  border-radius: 11px;
+
+  background:
+    rgba(11,45,107,.07);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 19px;
+}
+
+.financeiro-resumo-card small {
+  display: block;
+
+  color: #999;
+
+  font-size: 10px;
+
+  margin-bottom: 3px;
+}
+
+.financeiro-resumo-card strong {
+  color: #0B2D6B;
+
+  font-size: 20px;
+}
+
+.financeiro-pago {
+  border-left-color: #28a745;
+}
+
+.financeiro-pago strong {
+  color: #28a745;
+}
+
+.financeiro-pendente {
+  border-left-color: #dc3545;
+}
+
+.financeiro-pendente strong {
+  color: #dc3545;
+}
+
+@media (max-width: 850px) {
+  .detalhes-financeiro-resumo {
+    grid-template-columns: 1fr;
+  }
+}/* =================================
+   AVISO INÍCIO DAS MENSALIDADES
+================================= */
+
+.mensalidade-inicio-aviso {
+  background: rgba(11, 45, 107, .06);
+
+  border: 1px solid
+    rgba(11, 45, 107, .10);
+
+  border-left: 5px solid #0B2D6B;
+
+  border-radius: 12px;
+
+  padding: 14px 16px;
+
+  margin-bottom: 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+.mensalidade-inicio-aviso > span {
+  font-size: 22px;
+}
+
+.mensalidade-inicio-aviso strong {
+  display: block;
+
+  color: #0B2D6B;
+
+  font-size: 12px;
+}
+
+.mensalidade-inicio-aviso p {
+  color: #888;
+
+  font-size: 10px;
+
+  margin-top: 3px;
+}
+
+.periodo-atual small {
+  display: block;
+
+  color: #999;
+
+  font-size: 9px;
+
+  margin-top: 3px;
+}/* =================================
+   DASHBOARD FINANCEIRO
+================================= */
+
+.stat-detalhe {
+  display: block;
+  margin-top: 5px;
+
+  color: #aaa;
+
+  font-size: 9px;
+  font-weight: 500;
+}
+
+
+/* PERÍODO FINANCEIRO */
+
+.dashboard-periodo-financeiro {
+  margin-bottom: 20px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(11,45,107,.06),
+      rgba(245,196,0,.05)
+    );
+
+  border:
+    1px solid rgba(11,45,107,.08);
+
+  border-left:
+    5px solid #F5C400;
+
+  border-radius: 12px;
+
+  padding: 13px 16px;
+}
+
+.dashboard-periodo-financeiro > div {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.dashboard-periodo-financeiro
+> div > span {
+  font-size: 23px;
+}
+
+.dashboard-periodo-financeiro strong {
+  display: block;
+
+  color: #0B2D6B;
+
+  font-size: 12px;
+}
+
+.dashboard-periodo-financeiro p {
+  margin-top: 3px;
+
+  color: #888;
+
+  font-size: 10px;
+}
+
+
+/* =================================
+   PENDÊNCIAS
+================================= */
+
+.dashboard-box-icon-alerta {
+  color: #dc3545;
+  background:
+    rgba(220,53,69,.08);
+}
+
+.dashboard-pendentes-lista {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-pendente-item {
+  width: 100%;
+
+  background: transparent;
+
+  border: none;
+
+  border-bottom:
+    1px solid #f0f1f4;
+
+  border-radius: 0;
+
+  padding: 11px 3px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  text-align: left;
+}
+
+.dashboard-pendente-item:last-child {
+  border-bottom: none;
+}
+
+.dashboard-pendente-item:hover {
+  background: #fafbff;
+  transform: none;
+}
+
+.pendente-avatar {
+  width: 36px;
+  height: 36px;
+
+  min-width: 36px;
+
+  border-radius: 10px;
+
+  background:
+    rgba(220,53,69,.09);
+
+  color: #dc3545;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pendente-info {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.pendente-info strong {
+  color: #333;
+
+  font-size: 12px;
+}
+
+.pendente-info span {
+  color: #999;
+
+  font-size: 10px;
+}
+
+.pendente-status {
+  padding: 5px 8px;
+
+  border-radius: 20px;
+
+  background:
+    rgba(220,53,69,.08);
+
+  color: #dc3545;
+
+  font-size: 9px;
+
+  font-weight: 700;
+}
+
+.dashboard-pendentes-restante {
+  margin-top: 12px;
+
+  padding: 8px;
+
+  text-align: center;
+
+  border-radius: 8px;
+
+  background: #f7f8fb;
+
+  color: #888;
+
+  font-size: 10px;
+}
+
+
+/* TUDO PAGO */
+
+.dashboard-pagamentos-ok {
+  min-height: 180px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.dashboard-pagamentos-ok div {
+  font-size: 32px;
+
+  margin-bottom: 8px;
+}
+
+.dashboard-pagamentos-ok strong {
+  color: #28a745;
+
+  font-size: 14px;
+}
+
+.dashboard-pagamentos-ok span {
+  margin-top: 5px;
+
+  color: #999;
+
+  font-size: 10px;
+}
+
+
+/* =================================
+   ÚLTIMOS ATLETAS
+================================= */
+
+.dashboard-ultimos-box {
+  margin-top: 20px;
+}
+
+.dashboard-ultimos-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 10px;
+}
+
+.dashboard-ultimo-card {
+  width: 100%;
+
+  padding: 12px;
+
+  border: 1px solid #edf0f5;
+
+  border-radius: 11px;
+
+  background: #fafbfe;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  text-align: left;
+}
+
+.dashboard-ultimo-card:hover {
+  background: #f4f7fc;
+
+  border-color:
+    rgba(11,45,107,.12);
+
+  transform: translateY(-1px);
+}
+
+.dashboard-ultimo-card
+.atleta-info {
+  flex: 1;
+}
+
+
+/* RESPONSIVO */
+
+@media (max-width: 1000px) {
+  .dashboard-ultimos-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-ultimos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pendente-status {
+    display: none;
+  }
+}/* =================================
+   RELATÓRIOS — FINANCEIRO
+================================= */
+
+.relatorios-presenca-bloco {
+  margin-top: 30px;
+}
+
+.relatorio-ranking + .relatorios-cards {
+  margin-top: 30px;
+}
+
+.relatorio-ranking {
+  margin-bottom: 30px;
+}/* =================================
+   BOTÃO GERAR RELATÓRIO
+================================= */
+
+.relatorios-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.botao-gerar-relatorio {
+  width: auto;
+
+  padding: 11px 18px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: #0B2D6B;
+  color: #fff;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 14px rgba(11,45,107,.16);
+}
+
+.botao-gerar-relatorio:hover {
+  background: #082352;
+}
+
+
+/* =================================
+   IMPRESSÃO / SALVAR COMO PDF
+================================= */
+
+@media print {
+
+  body {
+    background: #fff !important;
+  }
+
+  .sidebar,
+  .sidebar-profissional,
+  .main-header,
+  .header-profissional,
+  .botao-gerar-relatorio {
+    display: none !important;
+  }
+
+  .content {
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  .mensalidades-periodo,
+  .relatorio-card,
+  .relatorio-box,
+  .relatorio-ranking,
+  .tabela-container {
+    box-shadow: none !important;
+  }
+
+  .relatorio-card,
+  .relatorio-box,
+  .relatorio-ranking,
+  tr {
+    break-inside: avoid;
+  }
+
+  .tabela-container {
+    overflow: visible !important;
+  }
+
+  .tabela-atletas {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}/* =========================================
+   CABEÇALHO DO RELATÓRIO - SOMENTE IMPRESSÃO
+========================================= */
+
+.cabecalho-relatorio-pdf {
+  display: none !important;
+}
+
+.cabecalho-relatorio-pdf .pdf-escudo {
+  width: 75px !important;
+  height: 75px !important;
+  max-width: 75px !important;
+  object-fit: contain;
+}
+
+/* =========================================
+   QUANDO GERAR PDF / IMPRIMIR
+========================================= */
+
+@media print {
+
+  .cabecalho-relatorio-pdf {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+
+    border-bottom: 3px solid #F5C400;
+  }
+
+  .cabecalho-relatorio-pdf .pdf-escudo {
+    width: 75px !important;
+    height: 75px !important;
+    max-width: 75px !important;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  .pdf-instituicao {
+    flex: 1;
+  }
+
+  .pdf-instituicao span {
+    display: block;
+    color: #0B2D6B;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    margin-bottom: 4px;
+  }
+
+  .pdf-instituicao h1 {
+    margin: 0;
+    color: #0B2D6B;
+    font-size: 21px;
+    font-weight: 900;
+  }
+
+  .pdf-instituicao p {
+    margin: 4px 0 0;
+    color: #555;
+    font-size: 10px;
+  }
+
+  .pdf-periodo {
+    min-width: 130px;
+    padding-left: 16px;
+    border-left: 1px solid #ddd;
+    text-align: right;
+  }
+
+  .pdf-periodo small {
+    display: block;
+    color: #777;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+  }
+
+  .pdf-periodo strong {
+    display: block;
+    color: #0B2D6B;
+    font-size: 15px;
+    font-weight: 900;
+  }
+
+  .pdf-periodo span {
+    display: block;
+    color: #777;
+    font-size: 8px;
+    margin-top: 5px;
+  }
 }

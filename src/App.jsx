@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Atletas from "./pages/Atletas";
+import DetalhesAtleta from "./pages/DetalhesAtleta";
 import Mensalidades from "./pages/Mensalidades";
 import Presenca from "./pages/Presenca";
 import Relatorios from "./pages/Relatorios";
@@ -19,7 +20,7 @@ export default function App() {
         element={<Login />}
       />
 
-      {/* ÁREA PROTEGIDA */}
+      {/* DASHBOARD */}
       <Route
         path="/dashboard"
         element={
@@ -29,6 +30,7 @@ export default function App() {
         }
       />
 
+      {/* ATLETAS */}
       <Route
         path="/atletas"
         element={
@@ -38,6 +40,17 @@ export default function App() {
         }
       />
 
+      {/* FICHA INDIVIDUAL DO ATLETA */}
+      <Route
+        path="/atletas/:id"
+        element={
+          <ProtectedRoute>
+            <DetalhesAtleta />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* MENSALIDADES */}
       <Route
         path="/mensalidades"
         element={
@@ -47,6 +60,7 @@ export default function App() {
         }
       />
 
+      {/* PRESENÇA */}
       <Route
         path="/presenca"
         element={
@@ -56,6 +70,7 @@ export default function App() {
         }
       />
 
+      {/* RELATÓRIOS */}
       <Route
         path="/relatorios"
         element={
@@ -65,6 +80,7 @@ export default function App() {
         }
       />
 
+      {/* CONFIGURAÇÕES */}
       <Route
         path="/configuracoes"
         element={

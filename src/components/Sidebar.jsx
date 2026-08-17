@@ -7,12 +7,8 @@ import {
   FaClipboardCheck,
   FaChartBar,
   FaCog,
+  FaInstagram,
 } from "react-icons/fa";
-
-<img
-  src="/escudo-adc.png"
-  alt="Escudo ADC"
-/>
 
 export default function Sidebar() {
   const links = [
@@ -50,8 +46,9 @@ export default function Sidebar() {
 
   return (
     <aside className="sidebar">
-      
+
       {/* LOGO */}
+
       <div className="sidebar-logo">
         <img
           src="/escudo-adc.png"
@@ -60,11 +57,14 @@ export default function Sidebar() {
 
         <div>
           <h2>ADC Manager</h2>
-          <span>Associação Desportiva Cicynho</span>
+          <span>
+            Associação Desportiva Cicynho
+          </span>
         </div>
       </div>
 
       {/* MENU */}
+
       <nav className="sidebar-menu">
         {links.map((link) => (
           <NavLink
@@ -86,17 +86,42 @@ export default function Sidebar() {
       </nav>
 
       {/* RODAPÉ */}
+
       <div className="sidebar-footer">
+
         <img
           src="/escudo-adc.png"
           alt="ADC"
         />
 
-        <div>
+        <div className="sidebar-footer-conteudo">
+
           <strong>ADC Manager</strong>
+
           <span>Sistema de gestão</span>
+
+          <div className="sidebar-desenvolvedor">
+
+            <small>
+              Desenvolvido por Leonardo Rafael
+            </small>
+
+            <a
+              href="https://www.instagram.com/leonardorafael.07/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaInstagram />
+
+              @leonardorafael.07
+            </a>
+
+          </div>
+
         </div>
+
       </div>
+
     </aside>
   );
 }

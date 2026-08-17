@@ -2,6 +2,7 @@ import {
   collection,
   addDoc,
   getDocs,
+  getDoc,
   deleteDoc,
   doc,
   updateDoc,
@@ -42,7 +43,11 @@ export async function adicionarAtleta(atleta) {
       ...atleta,
     };
   } catch (erro) {
-    console.error("ERRO FIREBASE:", erro);
+    console.error(
+      "ERRO FIREBASE:",
+      erro
+    );
+
     throw erro;
   }
 }
@@ -50,12 +55,15 @@ export async function adicionarAtleta(atleta) {
 // Listar atletas
 export async function listarAtletas() {
   try {
-    const snapshot = await getDocs(atletasRef);
+    const snapshot =
+      await getDocs(atletasRef);
 
-    return snapshot.docs.map((documento) => ({
-      id: documento.id,
-      ...documento.data(),
-    }));
+    return snapshot.docs.map(
+      (documento) => ({
+        id: documento.id,
+        ...documento.data(),
+      })
+    );
   } catch (erro) {
     console.error(
       "Erro ao listar atletas:",
@@ -63,6 +71,39 @@ export async function listarAtletas() {
     );
 
     return [];
+  }
+}
+
+// ========================================
+// BUSCAR ATLETA POR ID
+// ========================================
+
+export async function buscarAtletaPorId(id) {
+  try {
+    const referencia = doc(
+      db,
+      "atletas",
+      id
+    );
+
+    const snapshot =
+      await getDoc(referencia);
+
+    if (!snapshot.exists()) {
+      return null;
+    }
+
+    return {
+      id: snapshot.id,
+      ...snapshot.data(),
+    };
+  } catch (erro) {
+    console.error(
+      "Erro ao buscar atleta:",
+      erro
+    );
+
+    throw erro;
   }
 }
 
@@ -118,17 +159,78 @@ export async function listarPagamentos(
       where("ano", "==", ano)
     );
 
-    const snapshot = await getDocs(
-      consulta
-    );
+    const snapshot =
+      await getDocs(consulta);
 
-    return snapshot.docs.map((documento) => ({
-      id: documento.id,
-      ...documento.data(),
-    }));
+    return snapshot.docs.map(
+      (documento) => ({
+        id: documento.id,
+        ...documento.data(),
+      })
+    );
   } catch (erro) {
     console.error(
       "Erro ao listar pagamentos:",
+      erro
+    );
+
+    throw erro;
+  }
+}
+
+// ========================================
+// BUSCAR PAGAMENTOS DE UM ATLETA
+// ========================================
+
+export async function buscarPagamentosDoAtleta(
+  atletaId
+) {
+  try {
+    const consulta = query(
+      pagamentosRef,
+      where(
+        "atletaId",
+        "==",
+        atletaId
+      )
+    );
+
+    const snapshot =
+      await getDocs(consulta);
+
+    const pagamentos =
+      snapshot.docs.map(
+        (documento) => ({
+          id: documento.id,
+          ...documento.data(),
+        })
+      );
+
+    // Organiza do mais recente para o mais antigo
+    return pagamentos.sort(
+      (a, b) => {
+        const anoA =
+          Number(a.ano || 0);
+
+        const anoB =
+          Number(b.ano || 0);
+
+        const mesA =
+          Number(a.mes || 0);
+
+        const mesB =
+          Number(b.mes || 0);
+
+        if (anoA !== anoB) {
+          return anoB - anoA;
+        }
+
+        return mesB - mesA;
+      }
+    );
+  } catch (erro) {
+    console.error(
+      "Erro ao buscar pagamentos do atleta:",
       erro
     );
 
@@ -145,16 +247,22 @@ export async function registrarPagamento(
   valor
 ) {
   try {
-    const pagamentoExistente = query(
-      pagamentosRef,
-      where("atletaId", "==", atletaId),
-      where("mes", "==", mes),
-      where("ano", "==", ano)
-    );
+    const pagamentoExistente =
+      query(
+        pagamentosRef,
+        where(
+          "atletaId",
+          "==",
+          atletaId
+        ),
+        where("mes", "==", mes),
+        where("ano", "==", ano)
+      );
 
-    const snapshot = await getDocs(
-      pagamentoExistente
-    );
+    const snapshot =
+      await getDocs(
+        pagamentoExistente
+      );
 
     // Se já existe pagamento para aquele mês,
     // atualiza o documento existente
@@ -170,8 +278,9 @@ export async function registrarPagamento(
         ),
         {
           status: "pago",
-          valor: valor,
-          atualizadoEm: serverTimestamp(),
+          valor,
+          atualizadoEm:
+            serverTimestamp(),
         }
       );
 
@@ -186,19 +295,21 @@ export async function registrarPagamento(
       };
     }
 
-    // Se não existe, cria um novo pagamento
-    const documento = await addDoc(
-      pagamentosRef,
-      {
-        atletaId,
-        atletaNome,
-        mes,
-        ano,
-        valor,
-        status: "pago",
-        criadoEm: serverTimestamp(),
-      }
-    );
+    // Se não existe, cria novo pagamento
+    const documento =
+      await addDoc(
+        pagamentosRef,
+        {
+          atletaId,
+          atletaNome,
+          mes,
+          ano,
+          valor,
+          status: "pago",
+          criadoEm:
+            serverTimestamp(),
+        }
+      );
 
     return {
       id: documento.id,
@@ -228,14 +339,17 @@ export async function tornarPagamentoPendente(
   try {
     const consulta = query(
       pagamentosRef,
-      where("atletaId", "==", atletaId),
+      where(
+        "atletaId",
+        "==",
+        atletaId
+      ),
       where("mes", "==", mes),
       where("ano", "==", ano)
     );
 
-    const snapshot = await getDocs(
-      consulta
-    );
+    const snapshot =
+      await getDocs(consulta);
 
     if (snapshot.empty) {
       return;
@@ -252,7 +366,8 @@ export async function tornarPagamentoPendente(
       ),
       {
         status: "pendente",
-        atualizadoEm: serverTimestamp(),
+        atualizadoEm:
+          serverTimestamp(),
       }
     );
   } catch (erro) {
